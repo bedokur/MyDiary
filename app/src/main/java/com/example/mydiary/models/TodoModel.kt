@@ -1,7 +1,7 @@
 package com.example.mydiary.models
 
 
-data class Todo(
+data class TodoModel(
     val id: Int,
     val date_start: Long,
     val date_finish: Long,
