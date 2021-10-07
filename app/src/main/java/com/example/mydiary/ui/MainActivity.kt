@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.mydiary.MainContract
 import com.example.mydiary.databinding.ActivityMainBinding
+import com.example.mydiary.presenter.MainPresenter
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 
     private var binding: ActivityMainBinding? = null
+    private var presenter: MainContract.Presenter? = null
     // private var adapter: TodoAdapter? = null
     // private var recyclerView: RecyclerView? = null
 
@@ -16,10 +18,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
-
-        val dateStart = System.currentTimeMillis()
-        val dateFinish = System.currentTimeMillis() + 100000L
-
+        setPresenter(MainPresenter(this))
 
     }
 
@@ -28,6 +27,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun setPresenter(presenter: MainContract.Presenter) {
-        TODO("Not yet implemented")
+        this.presenter = presenter
     }
 }
