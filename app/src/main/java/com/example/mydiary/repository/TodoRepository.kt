@@ -10,16 +10,18 @@ import org.json.JSONObject
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
-import javax.inject.Inject
 
 class TodoRepository (private val context: Context) {
 
-    fun readJson() {
+    fun readJson(): Array<TodoModel> {
+        var output = arrayOf<TodoModel>()
         val file = File(context.filesDir, fileName)
+        if(!file.exists()){
+            return output
+        }
         val o = file.readText()
-        val output = Gson().fromJson(o, Array<TodoModel>::class.java)
-        Log.e("readJson", "$o, \n$output")
-        println()
+        output = Gson().fromJson(o, Array<TodoModel>::class.java)
+        return output
     }
 
     fun writeJson(todoItemList: List<TodoModel>) {

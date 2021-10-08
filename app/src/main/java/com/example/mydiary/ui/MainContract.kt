@@ -1,14 +1,13 @@
-package com.example.mydiary
+package com.example.mydiary.ui
 
 import com.example.mydiary.baseinterfaces.BasePresenter
-import com.example.mydiary.baseinterfaces.BaseView
 
 interface MainContract {
     interface Presenter : BasePresenter {
         fun showTodoItems()
     }
 
-    interface View : BaseView<Presenter> {
-        fun onDayClicked()
+    interface View  {
+        fun showTodoList()
     }
 }
