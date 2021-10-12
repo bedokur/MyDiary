@@ -1,6 +1,6 @@
 package com.example.mydiary.di
 
-import com.example.mydiary.ui.MainActivity
+import com.example.mydiary.ui.mainActivity.MainActivity
 import dagger.Component
 import dagger.Subcomponent
 import javax.inject.Singleton

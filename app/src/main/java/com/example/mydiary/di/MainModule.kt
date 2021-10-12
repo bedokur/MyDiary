@@ -1,6 +1,6 @@
 package com.example.mydiary.di
 
-import com.example.mydiary.ui.MainContract
+import com.example.mydiary.ui.mainActivity.MainContract
 import com.example.mydiary.presenter.MainPresenter
 import com.example.mydiary.repository.TodoRepository
 import dagger.Module

@@ -9,16 +9,36 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mydiary.R
 import com.example.mydiary.models.TodoModel
+import com.example.mydiary.ui.detailsActivity.Navigator
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class TodoAdapter : ListAdapter<TodoModel, TodoAdapter.TodoViewHolder>(DiffUtilAdapterCallback()) {
+class TodoAdapter(val listener: Navigator) :
+    ListAdapter<TodoModel, TodoAdapter.TodoViewHolder>(DiffUtilAdapterCallback()) {
 
-    class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         private val todoTime: TextView = itemView.findViewById(R.id.todo_time)
         private val todoName: TextView = itemView.findViewById(R.id.todo_name)
 
+        private val stringFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+
         fun bind(item: TodoModel) {
-            todoTime.text = item.date_start.toString()
+            todoTime.text =
+                "${stringFormatter.format(item.date_start)} - ${stringFormatter.format(item.date_finish)}"
             todoName.text = item.name
+        }
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            if (position != RecyclerView.NO_POSITION) {
+                val item = currentList[position]
+                listener.navigate(item)
+            }
         }
     }
 
@@ -31,7 +51,6 @@ class TodoAdapter : ListAdapter<TodoModel, TodoAdapter.TodoViewHolder>(DiffUtilA
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
-
 }
 
 class DiffUtilAdapterCallback : DiffUtil.ItemCallback<TodoModel>() {
@@ -42,6 +61,4 @@ class DiffUtilAdapterCallback : DiffUtil.ItemCallback<TodoModel>() {
     override fun areContentsTheSame(oldItem: TodoModel, newItem: TodoModel): Boolean {
         return oldItem == newItem
     }
-
-
 }

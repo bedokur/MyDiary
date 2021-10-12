@@ -1,8 +1,12 @@
 package com.example.mydiary
 
+import android.content.pm.InstrumentationInfo
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.runner.manipulation.Ordering
 
 /**
  * Example local unit test, which will execute on the development machine (host).
