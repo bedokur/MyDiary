@@ -11,12 +11,15 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 
-class TodoRepository (private val context: Context) {
+
+
+class TodoRepository(private val context: Context) {
+
+    private var output = arrayOf<TodoModel>()
 
     fun readJson(): Array<TodoModel> {
-        var output = arrayOf<TodoModel>()
         val file = File(context.filesDir, fileName)
-        if(!file.exists()){
+        if (!file.exists()) {
             return output
         }
         val o = file.readText()
@@ -25,9 +28,8 @@ class TodoRepository (private val context: Context) {
     }
 
     fun writeJson(todoItemList: List<TodoModel>) {
-
         val array = JSONArray()
-        todoItemList.forEach{
+        todoItemList.forEach {
             try {
                 val ob = JSONObject()
                 ob.put("id", it.id)

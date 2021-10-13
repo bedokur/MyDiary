@@ -12,6 +12,7 @@ import com.example.mydiary.adapters.TodoAdapter
 import com.example.mydiary.databinding.ActivityMainBinding
 import com.example.mydiary.di.MainModule
 import com.example.mydiary.models.TodoModel
+import com.example.mydiary.ui.createActivity.CreateTodoActivity
 import com.example.mydiary.ui.detailsActivity.DetailsActivity
 import com.example.mydiary.ui.detailsActivity.Navigator
 import java.text.SimpleDateFormat
@@ -47,6 +48,10 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
             Log.d("MainActivity", "$year , $month , $dayOfMonth")
             presenter.showTodoItems(year, month+1, dayOfMonth) //+1 потому как calendarView отсчет месяцев ведет с нуля
 
+        }
+
+        binding?.floatingActionButton?.setOnClickListener{
+            CreateTodoActivity.start(this)
         }
     }
 

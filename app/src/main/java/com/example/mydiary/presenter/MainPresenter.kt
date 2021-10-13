@@ -1,5 +1,6 @@
 package com.example.mydiary.presenter
 
+import android.util.Log
 import com.example.mydiary.models.TodoModel
 import com.example.mydiary.repository.TodoRepository
 import com.example.mydiary.ui.mainActivity.MainContract
@@ -25,7 +26,7 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
             TodoModel(3, 1634032800000L, 1634043600000L, "name3", "desc3"),
             TodoModel(4, 1634197696000L, 1634204896000L, "name4", "desc4")
         )
-        repository.writeJson(list)
+        repository.writeJson(list) //это может быть бесполезно так как сама функция чтения пока в главном потоке
         Single.just(repository.readJson())
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
