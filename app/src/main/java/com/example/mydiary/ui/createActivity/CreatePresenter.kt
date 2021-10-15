@@ -2,6 +2,7 @@ package com.example.mydiary.ui.createActivity
 
 import com.example.mydiary.models.TodoModel
 import com.example.mydiary.repository.TodoRepository
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -49,7 +50,11 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
     }
 
     init {
-        repository.readJson()
+        repository.getSingleListFromJson()
+            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
+            .subscribe()// сделал так чтобы находить самый большой id по актуальному списку,
+                        // хотя по факту - лишний эмит
     }
 
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.example.mydiary.models.TodoModel
 import com.google.gson.Gson
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.SingleOnSubscribe
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -16,15 +18,26 @@ class TodoRepository(private val context: Context) {
     private var currentList = arrayOf<TodoModel>()
     private var highestId: Int? = null
 
-    fun readJson(): Array<TodoModel> {
-        val file = File(context.filesDir, fileName)
-        if (!file.exists()) {
-            return currentList
+    // fun readJson(): Array<TodoModel> {
+    //     val file = File(context.filesDir, fileName)
+    //     if (!file.exists()) {
+    //         return currentList
+    //     }
+    //     val o = file.readText()
+    //     currentList = Gson().fromJson(o, Array<TodoModel>::class.java)
+    //     return currentList
+    // }
+    fun getSingleListFromJson(): Single<List<TodoModel>> =
+        Single.create {
+            val file = File(context.filesDir, fileName)
+            if (!file.exists()) {
+                it.onSuccess(currentList.asList())
+            } else {
+                val o = file.readText()
+                currentList = Gson().fromJson(o, Array<TodoModel>::class.java)
+                it.onSuccess(currentList.asList())
+            }
         }
-        val o = file.readText()
-        currentList = Gson().fromJson(o, Array<TodoModel>::class.java)
-        return currentList
-    }
 
     fun writeJson(todoItemList: List<TodoModel>) {
         val array = JSONArray()
@@ -50,7 +63,7 @@ class TodoRepository(private val context: Context) {
     }
 
     fun calcHighestId(): Int {
-        if(currentList.isNotEmpty()){
+        if (currentList.isNotEmpty()) {
             highestId = currentList.maxOf {
                 it.id
             }

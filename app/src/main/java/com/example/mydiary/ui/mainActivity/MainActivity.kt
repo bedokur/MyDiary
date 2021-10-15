@@ -41,9 +41,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
 
         cDate = binding?.calendarView?.date
 
-        showOnCreateTodo(cDate!!)
-
-
         binding?.calendarView?.setOnDateChangeListener { calView: CalendarView, year: Int, month: Int, dayOfMonth: Int ->
             Log.d("MainActivity", "$year , $month , $dayOfMonth")
             presenter.showTodoItems(year, month+1, dayOfMonth) //+1 потому как calendarView отсчет месяцев ведет с нуля
@@ -55,7 +52,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         }
     }
 
-    private fun showOnCreateTodo(cDate: Long) {
+    private fun showOnResumeTodo(cDate: Long) {
         val fYear = SimpleDateFormat("yyyy", Locale.getDefault())
         val fMonth = SimpleDateFormat("MM", Locale.getDefault())
         val fDayOfMonth = SimpleDateFormat("dd", Locale.getDefault())
@@ -83,7 +80,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
     override fun onResume() {
         super.onResume()
         presenter.onResume()
-        showOnCreateTodo(cDate!!)
+        showOnResumeTodo(cDate!!)
     }
 
 }

@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.mydiary.models.TodoModel
 import com.example.mydiary.repository.TodoRepository
 import com.example.mydiary.utils.Utils
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -17,11 +16,12 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
     private var todoList = emptyList<TodoModel>()
 
     private fun getTodoList() {
-        Single.just(repository.readJson()) //это может быть бесполезно так как сама функция чтения пока в главном потоке
+
+        repository.getSingleListFromJson()
+            .observeOn(Schedulers.computation())
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
             .subscribe({
-                todoList = it.asList()
+                todoList = it
             }, {
                 view?.showError(it.localizedMessage)
             })
@@ -90,6 +90,4 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
         this.view = null
         Log.d("__________________", "why this works")
     }
-
-
 }
