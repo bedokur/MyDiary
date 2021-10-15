@@ -7,8 +7,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mydiary.MyDiaryApp
+import com.example.mydiary.R
 import com.example.mydiary.databinding.ActivityCreateBinding
 import com.example.mydiary.di.CreateModule
 import com.google.android.material.snackbar.Snackbar
@@ -20,6 +22,7 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
     private var binding: ActivityCreateBinding? = null
     private var startHour: Int? = null
     private var startMinute: Int? = null
+    private var pgBar: ProgressBar? = null
 
     @Inject
     lateinit var presenter: CreateContract.Presenter
@@ -67,6 +70,27 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
                 view.hideKeyboard()
             }
         }
+
+        binding?.saveTodo?.setOnClickListener {
+            when {
+                binding?.nameInput?.text.isNullOrBlank() -> {
+                    binding?.nameInputLayout?.setErrorTextAppearance(R.style.error_appearance)
+                    binding?.nameInputLayout?.error = "Введите название!"
+                }
+                binding?.descriptionInput?.text.isNullOrBlank() -> {
+                    binding?.descriptionInputLayout?.setErrorTextAppearance(R.style.error_appearance)
+                    binding?.descriptionInputLayout?.error = "Необходимо коротко описать дело."
+                }
+                else -> {
+                    presenter.saveTodo(
+                        binding?.nameInput?.text.toString(),
+                        binding?.descriptionInput?.text.toString()
+                    )
+                    Thread.sleep(500L)
+                    finish()
+                }
+            }
+        }
     }
 
     private fun peekStartHours() {
@@ -90,21 +114,16 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
         presenter.peekFinishTime(hour, minute)
     }
 
-    override fun showDateStart(dateStart:String) {
+    override fun showDateStart(dateStart: String) {
         binding?.startTv?.text = dateStart
     }
 
-    override fun showDateFinish(dateFinish:String) {
+    override fun showDateFinish(dateFinish: String) {
         binding?.finishTv?.text = dateFinish
     }
 
     override fun showError(text: String) {
         Snackbar.make(this, binding?.root?.rootView!!, text, Snackbar.LENGTH_LONG).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onDestroy()
     }
 
     companion object {

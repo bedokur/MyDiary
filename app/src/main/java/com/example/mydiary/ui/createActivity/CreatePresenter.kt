@@ -13,7 +13,7 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
     private var finishTime: String? = null
 
     override fun peekStartDays(year: Int, month: Int, datOfMonth: Int) {
-        todoDate = "$datOfMonth-$month-$year"
+        todoDate = "$datOfMonth-${month+1}-$year"
     }
 
     override fun peekStartTime(hour: Int, minute: Int) {
@@ -26,16 +26,17 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
         if (todoDate != null) {
             view?.showDateFinish(todoDate + finishTime)
         }
-        view?.showError("Выберите начальную дату!")
     }
 
     override fun saveTodo(name: String, description: String) {
         val id = repository.calcHighestId() + 1
-        val formatter = SimpleDateFormat("dd-MM-yyyy hh:mm", Locale.getDefault())
+        val formatter = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
+        val startDate = todoDate+startTime
+        val finishDate = todoDate+finishTime
         val item = TodoModel(
             id = id,
-            date_start = formatter?.parse(todoDate + startTime).time,
-            date_finish = formatter.parse(todoDate + finishTime).time,
+            date_start = formatter.parse(startDate)!!.time,
+            date_finish = formatter.parse(finishDate)!!.time,
             name = name,
             description = description
         )
@@ -44,7 +45,11 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        view = null
+        this.view = null
     }
+
+    init {
+        repository.readJson()
+    }
+
 }

@@ -50,10 +50,13 @@ class TodoRepository(private val context: Context) {
     }
 
     fun calcHighestId(): Int {
-        highestId = currentList.maxOf {
-            it.id
+        if(currentList.isNotEmpty()){
+            highestId = currentList.maxOf {
+                it.id
+            }
+            return highestId as Int
         }
-        return highestId as Int
+        return 0
     }
 
     companion object {

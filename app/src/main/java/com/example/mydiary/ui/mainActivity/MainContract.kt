@@ -6,6 +6,7 @@ import com.example.mydiary.models.TodoModel
 interface MainContract {
     interface Presenter : BasePresenter {
         fun showTodoItems(year: Int, month: Int, dayOfMonth: Int)
+        fun onResume()
     }
 
     interface View {

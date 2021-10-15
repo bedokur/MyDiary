@@ -27,7 +27,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
     lateinit var presenter: MainContract.Presenter
     private var adapter: TodoAdapter? = null
     private var recyclerView: RecyclerView? = null
-
+    private var cDate: Long? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -39,7 +39,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         recyclerView?.layoutManager = LinearLayoutManager(this)
         recyclerView?.adapter = adapter
 
-        val cDate = binding?.calendarView?.date
+        cDate = binding?.calendarView?.date
 
         showOnCreateTodo(cDate!!)
 
@@ -75,13 +75,15 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         Toast.makeText(this@MainActivity, text, Toast.LENGTH_LONG).show()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding = null
-        presenter.onDestroy()
-    }
 
     override fun navigate(item: TodoModel) {
         DetailsActivity.start(this, item)
     }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume()
+        showOnCreateTodo(cDate!!)
+    }
+
 }

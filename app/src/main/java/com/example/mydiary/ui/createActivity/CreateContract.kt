@@ -14,5 +14,6 @@ interface CreateContract {
         fun showDateStart(dateStart: String)
         fun showDateFinish(dateFinish: String)
         fun showError(text: String)
+
     }
 }

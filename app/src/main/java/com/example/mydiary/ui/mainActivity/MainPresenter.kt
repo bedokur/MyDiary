@@ -1,5 +1,6 @@
 package com.example.mydiary.ui.mainActivity
 
+import android.util.Log
 import com.example.mydiary.models.TodoModel
 import com.example.mydiary.repository.TodoRepository
 import com.example.mydiary.utils.Utils
@@ -7,12 +8,11 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.Locale
-import javax.inject.Inject
 
 class MainPresenter(var view: MainContract.View?, var repository: TodoRepository) :
     MainContract.Presenter {
 
-    @Inject lateinit var utils: Utils
+    private val utils = Utils()
 
     private var todoList = emptyList<TodoModel>()
 
@@ -44,6 +44,10 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
             list = generateNewModelsForActivity(it)
         }
         view?.showTodoList(list)
+    }
+
+    override fun onResume() {
+        getTodoList()
     }
 
     private fun generateNewModelsForActivity(model: TodoModel): MutableList<TodoModel> {
@@ -81,10 +85,11 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
 
         return itemsList
     }
-    init {
-        getTodoList()
-    }
+
     override fun onDestroy() {
         this.view = null
+        Log.d("__________________", "why this works")
     }
+
+
 }
