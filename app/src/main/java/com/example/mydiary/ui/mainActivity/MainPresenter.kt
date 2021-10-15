@@ -1,33 +1,23 @@
-package com.example.mydiary.presenter
+package com.example.mydiary.ui.mainActivity
 
-import android.util.Log
 import com.example.mydiary.models.TodoModel
 import com.example.mydiary.repository.TodoRepository
-import com.example.mydiary.ui.mainActivity.MainContract
 import com.example.mydiary.utils.Utils
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 
 class MainPresenter(var view: MainContract.View?, var repository: TodoRepository) :
     MainContract.Presenter {
 
-    init {
-        getTodoList()
-    }
+    @Inject lateinit var utils: Utils
 
     private var todoList = emptyList<TodoModel>()
 
     private fun getTodoList() {
-        val list = listOf(
-            TodoModel(1, 1634029200000L, 1634032800000L, "name1", "desc1"),
-            TodoModel(2, 1634144400000L, 1634148000000L, "name2", "desc2"),
-            TodoModel(3, 1634032800000L, 1634043600000L, "name3", "desc3"),
-            TodoModel(4, 1634197696000L, 1634204896000L, "name4", "desc4")
-        )
-        repository.writeJson(list) //это может быть бесполезно так как сама функция чтения пока в главном потоке
-        Single.just(repository.readJson())
+        Single.just(repository.readJson()) //это может быть бесполезно так как сама функция чтения пока в главном потоке
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .subscribe({
@@ -57,7 +47,7 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
     }
 
     private fun generateNewModelsForActivity(model: TodoModel): MutableList<TodoModel> {
-        val newModel = Utils().roundModelsDate(model)
+        val newModel = utils.roundModelsDate(model)
         val itemsList = mutableListOf<TodoModel>()
 
         var i = newModel.date_start
@@ -91,7 +81,9 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
 
         return itemsList
     }
-
+    init {
+        getTodoList()
+    }
     override fun onDestroy() {
         this.view = null
     }

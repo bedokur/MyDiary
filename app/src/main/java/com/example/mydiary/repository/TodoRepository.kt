@@ -11,25 +11,25 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
 
-
-
 class TodoRepository(private val context: Context) {
 
-    private var output = arrayOf<TodoModel>()
+    private var currentList = arrayOf<TodoModel>()
+    private var highestId: Int? = null
 
     fun readJson(): Array<TodoModel> {
         val file = File(context.filesDir, fileName)
         if (!file.exists()) {
-            return output
+            return currentList
         }
         val o = file.readText()
-        output = Gson().fromJson(o, Array<TodoModel>::class.java)
-        return output
+        currentList = Gson().fromJson(o, Array<TodoModel>::class.java)
+        return currentList
     }
 
     fun writeJson(todoItemList: List<TodoModel>) {
         val array = JSONArray()
-        todoItemList.forEach {
+        currentList += todoItemList
+        currentList.forEach {
             try {
                 val ob = JSONObject()
                 ob.put("id", it.id)
@@ -47,6 +47,13 @@ class TodoRepository(private val context: Context) {
         val output = BufferedWriter(FileWriter(jsonFile))
         output.write(array.toString())
         output.close()
+    }
+
+    fun calcHighestId(): Int {
+        highestId = currentList.maxOf {
+            it.id
+        }
+        return highestId as Int
     }
 
     companion object {

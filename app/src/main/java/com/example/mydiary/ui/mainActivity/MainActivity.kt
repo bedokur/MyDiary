@@ -39,9 +39,9 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         recyclerView?.layoutManager = LinearLayoutManager(this)
         recyclerView?.adapter = adapter
 
-        val debug = binding?.calendarView?.date
+        val cDate = binding?.calendarView?.date
 
-        showOnCreateTodo(debug!!)
+        showOnCreateTodo(cDate!!)
 
 
         binding?.calendarView?.setOnDateChangeListener { calView: CalendarView, year: Int, month: Int, dayOfMonth: Int ->
@@ -55,15 +55,15 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         }
     }
 
-    private fun showOnCreateTodo(debug: Long) {
+    private fun showOnCreateTodo(cDate: Long) {
         val fYear = SimpleDateFormat("yyyy", Locale.getDefault())
         val fMonth = SimpleDateFormat("MM", Locale.getDefault())
         val fDayOfMonth = SimpleDateFormat("dd", Locale.getDefault())
 
         presenter.showTodoItems(
-            year = fYear.format(debug).toInt(),
-            month = fMonth.format(debug).toInt(),
-            dayOfMonth = fDayOfMonth.format(debug).toInt()
+            year = fYear.format(cDate).toInt(),
+            month = fMonth.format(cDate).toInt(),
+            dayOfMonth = fDayOfMonth.format(cDate).toInt()
         )
     }
 
