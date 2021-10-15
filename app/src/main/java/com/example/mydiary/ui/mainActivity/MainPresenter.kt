@@ -7,18 +7,21 @@ import com.example.mydiary.utils.Utils
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.Locale
+import javax.inject.Inject
 
-class MainPresenter(var view: MainContract.View?, var repository: TodoRepository) :
+class MainPresenter @Inject constructor(
+    var view: MainContract.View?,
+    var repository: TodoRepository,
+    var utils: Utils
+) :
     MainContract.Presenter {
-
-    private val utils = Utils()
 
     private var todoList = emptyList<TodoModel>()
 
     private fun getTodoList() {
 
         repository.getSingleListFromJson()
-            .observeOn(Schedulers.computation())
+            .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
             .subscribe({
                 todoList = it
@@ -27,22 +30,23 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
             })
     }
 
-    /**
-     * month +1 потому что "месяц" в календаре начинается с 0
-     */
     override fun showTodoItems(year: Int, month: Int, dayOfMonth: Int) {
         val selectedDate = "$dayOfMonth-${month}-$year"
         val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
 
         val dayMatchedList = todoList.filter {
             formatter.format(it.date_start) == selectedDate
-        } as MutableList<TodoModel>
 
+        } as MutableList<TodoModel>
+        dayMatchedList.sortBy {
+            it.date_finish
+        }
         val list = mutableListOf<TodoModel>()
 
         dayMatchedList.forEach {
             list += generateNewModelsForActivity(it)
         }
+        Log.wtf("showTodoItems", "$dayMatchedList")
         view?.showTodoList(list)
     }
 

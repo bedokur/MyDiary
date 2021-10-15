@@ -3,13 +3,11 @@ package com.example.mydiary.di
 import android.content.Context
 import com.example.mydiary.MyDiaryApp
 import com.example.mydiary.repository.TodoRepository
+import com.example.mydiary.utils.Utils
 import dagger.Module
 import dagger.Provides
 import javax.inject.Scope
-
-@Scope
-@Retention(AnnotationRetention.RUNTIME)
-annotation class ActivityScope
+import javax.inject.Singleton
 
 @Module
 class AppModule(private val application: MyDiaryApp) {
@@ -20,8 +18,14 @@ class AppModule(private val application: MyDiaryApp) {
     }
 
     @Provides
+    @Singleton
     fun provideRepository(context: Context): TodoRepository {
         return TodoRepository(context)
+    }
+
+    @Provides
+    fun provideUtils(): Utils {
+        return Utils()
     }
 }
 

@@ -5,7 +5,6 @@ import android.util.Log
 import com.example.mydiary.models.TodoModel
 import com.google.gson.Gson
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.core.SingleOnSubscribe
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject

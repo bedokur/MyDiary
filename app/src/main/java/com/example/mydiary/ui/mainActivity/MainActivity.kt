@@ -21,13 +21,15 @@ import javax.inject.Inject
 
 class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.View, Navigator {
 
-    private var binding: ActivityMainBinding? = null
-
     @Inject
     lateinit var presenter: MainContract.Presenter
+
+
+    private var binding: ActivityMainBinding? = null
     private var adapter: TodoAdapter? = null
     private var recyclerView: RecyclerView? = null
     private var cDate: Long? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -39,17 +41,22 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         recyclerView?.layoutManager = LinearLayoutManager(this)
         recyclerView?.adapter = adapter
 
-        cDate = binding?.calendarView?.date
+
 
         binding?.calendarView?.setOnDateChangeListener { calView: CalendarView, year: Int, month: Int, dayOfMonth: Int ->
             Log.d("MainActivity", "$year , $month , $dayOfMonth")
-            presenter.showTodoItems(year, month+1, dayOfMonth) //+1 потому как calendarView отсчет месяцев ведет с нуля
+            presenter.showTodoItems(
+                year,
+                month + 1,
+                dayOfMonth
+            ) //+1 потому как calendarView отсчет месяцев ведет с нуля
 
         }
 
-        binding?.floatingActionButton?.setOnClickListener{
+        binding?.floatingActionButton?.setOnClickListener {
             CreateTodoActivity.start(this)
         }
+        cDate = binding?.calendarView?.date
     }
 
     private fun showOnResumeTodo(cDate: Long) {
@@ -65,13 +72,13 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
     }
 
     override fun showTodoList(listForView: List<TodoModel>) {
+        Log.wtf("showTodoList", "$listForView")
         adapter?.submitList(listForView)
     }
 
     override fun showError(text: String?) {
         Toast.makeText(this@MainActivity, text, Toast.LENGTH_LONG).show()
     }
-
 
     override fun navigate(item: TodoModel) {
         DetailsActivity.start(this, item)
@@ -82,5 +89,4 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         presenter.onResume()
         showOnResumeTodo(cDate!!)
     }
-
 }

@@ -5,6 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mydiary.databinding.ActivityDetailsBinding
 import com.example.mydiary.models.TodoModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -17,10 +20,16 @@ class DetailsActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = null
-        val extras = intent.extras
+        val extras = intent.extras!!
 
-        binding?.name?.text = extras?.getString("name")
-        binding?.description?.text = extras?.getString("description")
+        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+        val start_date = formatter.format(Date(extras.getLong("date_start")))
+        val finish_date = formatter.format(Date(extras.getLong("date_finish")))
+        val representativeDate = "$start_date - $finish_date"
+
+        binding?.date?.text = representativeDate
+        binding?.name?.text = extras.getString("name")
+        binding?.description?.text = extras.getString("description")
     }
 
     override fun onDestroy() {
@@ -32,7 +41,7 @@ class DetailsActivity : AppCompatActivity() {
         fun start(activity: AppCompatActivity, item: TodoModel) {
             val intent = Intent(activity, DetailsActivity::class.java).apply {
                 putExtra("name", item.name)
-                putExtra("date", item.date_start)
+                putExtra("date_start", item.date_start)
                 putExtra("date_finish", item.date_finish)
                 putExtra("description", item.description)
             }

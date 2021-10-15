@@ -4,6 +4,7 @@ import com.example.mydiary.models.TodoModel
 import com.example.mydiary.repository.TodoRepository
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class CreatePresenter(var view: CreateContract.View?, var repository: TodoRepository) :
@@ -12,9 +13,10 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
     private var todoDate: String? = null
     private var startTime: String? = null
     private var finishTime: String? = null
+    private var currentList: List<TodoModel>? = null
 
     override fun peekStartDays(year: Int, month: Int, datOfMonth: Int) {
-        todoDate = "$datOfMonth-${month+1}-$year"
+        todoDate = "$datOfMonth-${month + 1}-$year"
     }
 
     override fun peekStartTime(hour: Int, minute: Int) {
@@ -32,8 +34,8 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
     override fun saveTodo(name: String, description: String) {
         val id = repository.calcHighestId() + 1
         val formatter = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault())
-        val startDate = todoDate+startTime
-        val finishDate = todoDate+finishTime
+        val startDate = todoDate + startTime
+        val finishDate = todoDate + finishTime
         val item = TodoModel(
             id = id,
             date_start = formatter.parse(startDate)!!.time,
@@ -41,8 +43,27 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
             name = name,
             description = description
         )
-        val list = listOf(item)
-        repository.writeJson(list)
+        if (!checkCollisions(item)) {
+            val list = listOf(item)
+            repository.writeJson(list)
+            view?.finishActivity()
+        } else {
+            view?.showError("У вас есть дело в это время! Постарайтесь перенести в другое время.")
+        }
+    }
+
+    private fun checkCollisions(item: TodoModel): Boolean {
+        val formatter = SimpleDateFormat("dd-MM-yyyy HH", Locale.getDefault())
+        var startCheck = false
+        var finishCheck = false
+        currentList?.forEach {
+            startCheck = formatter.format(Date(it.date_start)) == formatter.format(Date(item.date_start))
+        }
+        currentList?.forEach {
+            finishCheck = formatter.format(Date(it.date_finish)) == formatter.format(Date(item.date_finish))
+        }
+        // TODO: 16.10.2021 rework! this doenst work exactly 
+        return startCheck || finishCheck
     }
 
     override fun onDestroy() {
@@ -53,8 +74,11 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
         repository.getSingleListFromJson()
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
-            .subscribe()// сделал так чтобы находить самый большой id по актуальному списку,
-                        // хотя по факту - лишний эмит
+            .subscribe({
+                currentList = it
+            }, {
+                Throwable(it.localizedMessage)
+            })// сделал так чтобы находить самый большой id по актуальному списку,
+        // хотя по факту - лишний эмит
     }
-
 }

@@ -86,8 +86,7 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
                         binding?.nameInput?.text.toString(),
                         binding?.descriptionInput?.text.toString()
                     )
-                    Thread.sleep(500L)
-                    finish()
+                    it.hideKeyboard()
                 }
             }
         }
@@ -123,7 +122,11 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
     }
 
     override fun showError(text: String) {
-        Snackbar.make(this, binding?.root?.rootView!!, text, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(this, binding?.saveTodo!!, text, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun finishActivity() {
+        finish()
     }
 
     companion object {
