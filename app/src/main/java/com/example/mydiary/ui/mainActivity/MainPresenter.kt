@@ -38,10 +38,10 @@ class MainPresenter(var view: MainContract.View?, var repository: TodoRepository
             formatter.format(it.date_start) == selectedDate
         } as MutableList<TodoModel>
 
-        var list = mutableListOf<TodoModel>()
+        val list = mutableListOf<TodoModel>()
 
         dayMatchedList.forEach {
-            list = generateNewModelsForActivity(it)
+            list += generateNewModelsForActivity(it)
         }
         view?.showTodoList(list)
     }
