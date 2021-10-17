@@ -61,7 +61,7 @@ class MainPresenter @Inject constructor(
         var i = newModel.date_start
         val i2 = newModel.date_finish
         val i3 = (i2 - i) / 3600000L //число - количество экземпляров 1 дела,
-                                    // но с расчетом округленного времени(12:00 - 13:00 и т.д.)
+        // но с расчетом округленного времени(12:00 - 13:00 и т.д.)
 
         for (mtp in 0 until i3.toInt()) {
             if (i >= i2) {

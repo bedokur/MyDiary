@@ -4,12 +4,11 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mydiary.MyDiaryApp
 import com.example.mydiary.R
 import com.example.mydiary.databinding.ActivityCreateBinding
-import com.example.mydiary.di.CreateModule
+import com.example.mydiary.di.module.CreateModule
 import com.example.mydiary.utils.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
@@ -121,6 +120,12 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
 
     override fun finishActivity() {
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
+        this.binding = null
     }
 
     private val startCallback = TimePickerDialog.OnTimeSetListener { _, hour, minute ->

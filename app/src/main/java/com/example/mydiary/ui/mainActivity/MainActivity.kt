@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mydiary.MyDiaryApp
 import com.example.mydiary.adapters.TodoAdapter
 import com.example.mydiary.databinding.ActivityMainBinding
-import com.example.mydiary.di.MainModule
+import com.example.mydiary.di.module.MainModule
 import com.example.mydiary.models.TodoModel
 import com.example.mydiary.ui.createActivity.CreateTodoActivity
 import com.example.mydiary.ui.detailsActivity.DetailsActivity
@@ -23,7 +23,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
 
     @Inject
     lateinit var presenter: MainContract.Presenter
-
 
     private var binding: ActivityMainBinding? = null
     private var adapter: TodoAdapter? = null
@@ -43,7 +42,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
 
 
 
-        binding?.calendarView?.setOnDateChangeListener { calView: CalendarView, year: Int, month: Int, dayOfMonth: Int ->
+        binding?.calendarView?.setOnDateChangeListener { _: CalendarView, year: Int, month: Int, dayOfMonth: Int ->
             Log.d("MainActivity", "$year , $month , $dayOfMonth")
             presenter.showTodoItems(
                 year,
@@ -57,6 +56,8 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
             CreateTodoActivity.start(this)
         }
         cDate = binding?.calendarView?.date
+        Toast.makeText(this, "toasted on created", Toast.LENGTH_SHORT).show()
+
     }
 
     private fun showOnResumeTodo(cDate: Long) {
@@ -80,13 +81,19 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         Toast.makeText(this@MainActivity, text, Toast.LENGTH_LONG).show()
     }
 
-    override fun navigate(item: TodoModel) {
-        DetailsActivity.start(this, item)
+    override fun navigate(itemID: Int) {
+        DetailsActivity.start(this, itemID)
     }
 
     override fun onResume() {
         super.onResume()
         presenter.onResume()
         showOnResumeTodo(cDate!!)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.onDestroy()
+        this.binding = null
     }
 }

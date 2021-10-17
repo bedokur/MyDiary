@@ -5,44 +5,140 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/name"
+    <LinearLayout
+        android:id="@+id/name_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:includeFontPadding="false"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        tools:text="Name" />
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
 
-    <TextView
-        android:id="@+id/date"
+        <TextView
+            android:layout_width="75dp"
+            android:layout_height="20dp"
+            android:includeFontPadding="false"
+            android:text="@string/nameHint"
+            android:layout_marginStart="10dp"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:includeFontPadding="false"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="10dp"
+            tools:text="Name" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/date_layout"
         android:layout_width="wrap_content"
-        android:layout_height="23dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="10dp"
-        android:includeFontPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/name"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/name_layout"
         app:layout_constraintStart_toStartOf="parent"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        tools:text="dd-MM-yyyy: HH:mm - dd-MM-yyyy: HH:mm" />
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="10dp">
 
-    <TextView
-        android:id="@+id/description"
+        <TextView
+            android:id="@+id/date_heading"
+            android:layout_width="35dp"
+            android:layout_height="20dp"
+            android:text="@string/date_heading"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="5dp"
+            tools:text="DD.MM.YYYY"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hours_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/date_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:id="@+id/start_hour_header"
+            android:layout_width="75dp"
+            android:layout_height="25dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="Начало" />
+
+        <TextView
+            android:id="@+id/start_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            tools:text="HH:MM" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/finish_hours_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/hours_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:id="@+id/finish_hour_header"
+            android:layout_width="60dp"
+            android:layout_height="25dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="Конец" />
+
+        <TextView
+            android:id="@+id/finish_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginStart="8dp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            tools:text="HH:MM" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/descr_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="start"
-        android:includeFontPadding="false"
-        android:textColor="@color/black"
-        android:padding="10dp"
-        tools:text="@string/lorem"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/date"
+        app:layout_constraintTop_toBottomOf="@id/finish_hours_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="10dp">
+
+         <TextView
+             android:layout_width="65dp"
+             android:layout_height="20dp"
+             android:text="@string/description_header"/>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="start"
+            android:includeFontPadding="false"
+            android:textColor="@color/black"
+            tools:text="@string/lorem"
+            android:textSize="24sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

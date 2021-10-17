@@ -3,6 +3,7 @@ package com.example.mydiary.utils
 import com.example.mydiary.models.TodoModel
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class Utils {
@@ -13,8 +14,10 @@ class Utils {
     fun roundModelsDate(model: TodoModel): TodoModel {
         val date_start = model.date_start
         val date_finish = model.date_finish
-        val roundedStartTime = hoursFormatter.format(date_start).toBigDecimal().setScale(0, RoundingMode.DOWN)
-        val roundedStopTime = hoursFormatter.format(date_finish).toBigDecimal().setScale(0, RoundingMode.UP)
+        val roundedStartTime =
+            hoursFormatter.format(date_start).toBigDecimal().setScale(0, RoundingMode.DOWN)
+        val roundedStopTime =
+            hoursFormatter.format(date_finish).toBigDecimal().setScale(0, RoundingMode.UP)
         val formattedStartTime = "$roundedStartTime:00"
         val formattedStopTime = "$roundedStopTime:00"
         val newStartDate = datesFormatter.format(date_start).plus(formattedStartTime)
@@ -28,4 +31,19 @@ class Utils {
             model.description
         )
     }
+}
+
+fun formatToDate(startDate: Long): String {
+    val formatter = SimpleDateFormat("dd.MM.yy ", Locale.getDefault())
+    return formatter.format(Date(startDate))
+}
+
+fun formatToHours(date: Long): String {
+    val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return formatter.format(Date(date))
+}
+
+fun longDateToInd(t: Long): Int {
+    val formatter = SimpleDateFormat("HH", Locale.getDefault())
+    return formatter.format(Date(t)).toInt()
 }

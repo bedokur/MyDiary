@@ -1,4 +1,4 @@
-package com.example.mydiary.di
+package com.example.mydiary.di.module
 
 import com.example.mydiary.repository.TodoRepository
 import com.example.mydiary.ui.createActivity.CreateContract

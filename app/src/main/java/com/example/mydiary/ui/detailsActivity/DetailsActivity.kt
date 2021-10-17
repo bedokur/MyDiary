@@ -3,47 +3,54 @@ package com.example.mydiary.ui.detailsActivity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mydiary.MyDiaryApp
 import com.example.mydiary.databinding.ActivityDetailsBinding
+import com.example.mydiary.di.module.DetailsModule
 import com.example.mydiary.models.TodoModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.example.mydiary.utils.formatToDate
+import com.example.mydiary.utils.formatToHours
+import javax.inject.Inject
 
-class DetailsActivity : AppCompatActivity() {
+class DetailsActivity @Inject constructor() : AppCompatActivity(), DetailsContract.View {
 
     private var binding: ActivityDetailsBinding? = null
+
+    @Inject
+    lateinit var presenter: DetailsContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding?.root)
+        (applicationContext as MyDiaryApp).appComponent.plus(DetailsModule(this)).inject(this)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = null
-        val extras = intent.extras!!
+        val extras = intent.extras
+        if (extras != null)
+            presenter.getTodoDetails(extras.getInt("itemID"))
+    }
 
-        val formatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-        val start_date = formatter.format(Date(extras.getLong("date_start")))
-        val finish_date = formatter.format(Date(extras.getLong("date_finish")))
-        val representativeDate = "$start_date - $finish_date"
-
-        binding?.date?.text = representativeDate
-        binding?.name?.text = extras.getString("name")
-        binding?.description?.text = extras.getString("description")
+    override fun showDetails(item: TodoModel?) {
+        if (item != null) {
+            binding?.name?.text = item.name
+            binding?.date?.text = formatToDate(item.date_start)
+            binding?.startHour?.text = formatToHours(item.date_start)
+            binding?.finishHour?.text = formatToHours(item.date_finish)
+            binding?.description?.text = item.description
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        presenter.onDestroy()
         binding = null
     }
 
     companion object {
-        fun start(activity: AppCompatActivity, item: TodoModel) {
+        fun start(activity: AppCompatActivity, itemID: Int) {
             val intent = Intent(activity, DetailsActivity::class.java).apply {
-                putExtra("name", item.name)
-                putExtra("date_start", item.date_start)
-                putExtra("date_finish", item.date_finish)
-                putExtra("description", item.description)
+                putExtra("itemID", itemID)
             }
             activity.startActivity(intent)
         }

@@ -2,6 +2,7 @@ package com.example.mydiary.ui.createActivity
 
 import com.example.mydiary.models.TodoModel
 import com.example.mydiary.repository.TodoRepository
+import com.example.mydiary.utils.longDateToInd
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -93,11 +94,6 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
         this.view = null
     }
 
-    private fun longDateToInd(t: Long): Int {
-        val formatter = SimpleDateFormat("HH", Locale.getDefault())
-        return formatter.format(Date(t)).toInt()
-    }
-
     init {
         repository.getSingleListFromJson()
             .observeOn(Schedulers.io())
@@ -107,7 +103,7 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
             }, {
                 Throwable(it.localizedMessage)
             })// сделал так чтобы находить самый большой id по актуальному списку,
-              // хотя по факту - возможно лишний эммит
+        // хотя по факту - возможно лишний эммит
     }
 }
 

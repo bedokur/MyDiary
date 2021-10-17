@@ -22,10 +22,5 @@ class AppModule(private val application: MyDiaryApp) {
     fun provideRepository(context: Context): TodoRepository {
         return TodoRepository(context)
     }
-
-    @Provides
-    fun provideUtils(): Utils {
-        return Utils()
-    }
 }
 

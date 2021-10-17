@@ -17,15 +17,6 @@ class TodoRepository(private val context: Context) {
     private var currentList = arrayOf<TodoModel>()
     private var highestId: Int? = null
 
-    // fun readJson(): Array<TodoModel> {
-    //     val file = File(context.filesDir, fileName)
-    //     if (!file.exists()) {
-    //         return currentList
-    //     }
-    //     val o = file.readText()
-    //     currentList = Gson().fromJson(o, Array<TodoModel>::class.java)
-    //     return currentList
-    // }
     fun getSingleListFromJson(): Single<List<TodoModel>> =
         Single.create {
             val file = File(context.filesDir, fileName)
