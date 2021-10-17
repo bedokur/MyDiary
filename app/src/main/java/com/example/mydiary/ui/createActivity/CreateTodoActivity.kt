@@ -2,17 +2,15 @@ package com.example.mydiary.ui.createActivity
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mydiary.MyDiaryApp
 import com.example.mydiary.R
 import com.example.mydiary.databinding.ActivityCreateBinding
 import com.example.mydiary.di.CreateModule
+import com.example.mydiary.utils.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
 import javax.inject.Inject
@@ -22,7 +20,6 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
     private var binding: ActivityCreateBinding? = null
     private var startHour: Int? = null
     private var startMinute: Int? = null
-    private var pgBar: ProgressBar? = null
 
     @Inject
     lateinit var presenter: CreateContract.Presenter
@@ -71,6 +68,12 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
             }
         }
 
+        binding?.descriptionInput?.setOnFocusChangeListener { view, b ->
+            if (!b) {
+                view.hideKeyboard()
+            }
+        }
+
         binding?.saveTodo?.setOnClickListener {
             when {
                 binding?.nameInput?.text.isNullOrBlank() -> {
@@ -104,15 +107,6 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
         ).show()
     }
 
-    private val startCallback = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-        startHour = hour
-        startMinute = minute
-        presenter.peekStartTime(hour, minute)
-    }
-    private val finishCallback = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-        presenter.peekFinishTime(hour, minute)
-    }
-
     override fun showDateStart(dateStart: String) {
         binding?.startTv?.text = dateStart
     }
@@ -129,15 +123,19 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
         finish()
     }
 
+    private val startCallback = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+        startHour = hour
+        startMinute = minute
+        presenter.peekStartTime(hour, minute)
+    }
+    private val finishCallback = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+        presenter.peekFinishTime(hour, minute)
+    }
+
     companion object {
         fun start(activity: AppCompatActivity) {
             val intent = Intent(activity, CreateTodoActivity::class.java)
             activity.startActivity(intent)
         }
     }
-}
-
-fun View.hideKeyboard() {
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(windowToken, 0)
 }

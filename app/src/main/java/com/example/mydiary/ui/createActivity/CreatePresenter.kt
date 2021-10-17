@@ -52,22 +52,50 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
         }
     }
 
+    /**
+     * функция для проверки пересечений с существующими делами, при пересечении нельзя запланировать
+     * новое дело
+     */
     private fun checkCollisions(item: TodoModel): Boolean {
-        val formatter = SimpleDateFormat("dd-MM-yyyy HH", Locale.getDefault())
-        var startCheck = false
-        var finishCheck = false
-        currentList?.forEach {
-            startCheck = formatter.format(Date(it.date_start)) == formatter.format(Date(item.date_start))
+        val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
+        val filteredList = currentList?.filter {
+            formatter.format(Date(item.date_start)) == formatter.format(Date(it.date_start))
+        } as MutableList<TodoModel>
+
+        filteredList.sortBy {
+            it.date_start
         }
-        currentList?.forEach {
-            finishCheck = formatter.format(Date(it.date_finish)) == formatter.format(Date(item.date_finish))
+        if (filteredList.isEmpty()) {
+            return false
         }
-        // TODO: 16.10.2021 rework! this doenst work exactly 
-        return startCheck || finishCheck
+        if (longDateToInd(item.date_start) < longDateToInd(filteredList[0].date_start)) {
+            if (longDateToInd(item.date_finish) <= longDateToInd(filteredList[0].date_start)) {
+                return false
+            }
+        }
+        if (longDateToInd(item.date_start) >= longDateToInd(filteredList.last().date_finish)) {
+            return false
+        }
+        for (ind in 0 until filteredList.size) {
+            if (longDateToInd(item.date_start) >= longDateToInd(filteredList[ind].date_finish)) {
+                if (filteredList.getOrNull(ind + 1) != null) {
+                    if (longDateToInd(item.date_finish) <= longDateToInd(filteredList[ind + 1].date_start)) {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
     }
 
     override fun onDestroy() {
         this.view = null
+    }
+
+    private fun longDateToInd(t: Long): Int {
+        val formatter = SimpleDateFormat("HH", Locale.getDefault())
+        return formatter.format(Date(t)).toInt()
     }
 
     init {
@@ -79,6 +107,7 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
             }, {
                 Throwable(it.localizedMessage)
             })// сделал так чтобы находить самый большой id по актуальному списку,
-        // хотя по факту - лишний эмит
+              // хотя по факту - возможно лишний эммит
     }
 }
+

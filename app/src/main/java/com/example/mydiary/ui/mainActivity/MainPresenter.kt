@@ -33,15 +33,15 @@ class MainPresenter @Inject constructor(
     override fun showTodoItems(year: Int, month: Int, dayOfMonth: Int) {
         val selectedDate = "$dayOfMonth-${month}-$year"
         val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val list = mutableListOf<TodoModel>()
 
         val dayMatchedList = todoList.filter {
             formatter.format(it.date_start) == selectedDate
-
         } as MutableList<TodoModel>
+
         dayMatchedList.sortBy {
             it.date_finish
         }
-        val list = mutableListOf<TodoModel>()
 
         dayMatchedList.forEach {
             list += generateNewModelsForActivity(it)
@@ -60,7 +60,8 @@ class MainPresenter @Inject constructor(
 
         var i = newModel.date_start
         val i2 = newModel.date_finish
-        val i3 = (i2 - i) / 3600000L
+        val i3 = (i2 - i) / 3600000L //число - количество экземпляров 1 дела,
+                                    // но с расчетом округленного времени(12:00 - 13:00 и т.д.)
 
         for (mtp in 0 until i3.toInt()) {
             if (i >= i2) {
@@ -92,6 +93,5 @@ class MainPresenter @Inject constructor(
 
     override fun onDestroy() {
         this.view = null
-        Log.d("__________________", "why this works")
     }
 }
