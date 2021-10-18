@@ -119,7 +119,7 @@ class CreateTodoActivity @Inject constructor() : AppCompatActivity(), CreateCont
     }
 
     override fun finishActivity() {
-        finish()
+        onBackPressed()
     }
 
     override fun onDestroy() {

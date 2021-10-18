@@ -10,4 +10,8 @@
     <string name="nameHint">Название</string>
     <string name="date_heading">Дата:</string>
     <string name="description_header">Описание</string>
+    <string name="hours_template">%1$s - %2$s</string>
+    <string name="save">Сохранить</string>
+    <string name="start">Начало</string>
+    <string name="end">Конец</string>
 </resources>

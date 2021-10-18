@@ -20,10 +20,13 @@ class TodoAdapter(val listener: Navigator) :
         private val todoTime: TextView = itemView.findViewById(R.id.todo_time)
         private val todoName: TextView = itemView.findViewById(R.id.todo_name)
 
-
         fun bind(item: TodoModel) {
-            todoTime.text =
-                "${formatToHours(item.date_start)} - ${formatToHours(item.date_finish)}"
+
+            todoTime.text = itemView.context.getString(
+                R.string.hours_template,
+                formatToHours(item.date_start),
+                formatToHours(item.date_finish)
+            )
             todoName.text = item.name
         }
 

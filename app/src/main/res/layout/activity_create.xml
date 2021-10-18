@@ -88,6 +88,6 @@
         android:layout_gravity="end"
         android:layout_marginEnd="18dp"
         android:layout_marginTop="8dp"
-        android:text="Сохранить" />
+        android:text="@string/save" />
 
 </LinearLayout>

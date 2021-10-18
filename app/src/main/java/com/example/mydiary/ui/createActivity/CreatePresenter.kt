@@ -27,8 +27,10 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
 
     override fun peekFinishTime(hour: Int, minute: Int) {
         finishTime = " $hour:$minute"
-        if (todoDate != null) {
+        if (todoDate != null && checkTime(startTime!!, finishTime!!)) {
             view?.showDateFinish(todoDate + finishTime)
+        } else {
+            view?.showError("Конечное время не может быть меньше начального!")
         }
     }
 
@@ -90,6 +92,11 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
         return true
     }
 
+    private fun checkTime(startTime: String, finishTime: String): Boolean {
+        val formatter = SimpleDateFormat(" HH:mm", Locale.getDefault())
+        return formatter.parse(startTime)!!.time < formatter.parse(finishTime)!!.time
+    }
+
     override fun onDestroy() {
         this.view = null
     }
@@ -104,6 +111,7 @@ class CreatePresenter(var view: CreateContract.View?, var repository: TodoReposi
                 Throwable(it.localizedMessage)
             })// сделал так чтобы находить самый большой id по актуальному списку,
         // хотя по факту - возможно лишний эммит
+        //и еще для проверок пересечений дат
     }
 }
 

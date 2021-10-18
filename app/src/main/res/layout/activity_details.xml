@@ -75,7 +75,7 @@
             android:layout_height="25dp"
             android:textSize="20sp"
             android:textColor="@color/black"
-            android:text="Начало" />
+            android:text="@string/start" />
 
         <TextView
             android:id="@+id/start_hour"
@@ -102,7 +102,7 @@
             android:layout_height="25dp"
             android:textSize="20sp"
             android:textColor="@color/black"
-            android:text="Конец" />
+            android:text="@string/end" />
 
         <TextView
             android:id="@+id/finish_hour"

@@ -1,6 +1,5 @@
 package com.example.mydiary.ui.mainActivity
 
-import android.util.Log
 import com.example.mydiary.models.TodoModel
 import com.example.mydiary.repository.TodoRepository
 import com.example.mydiary.utils.Utils
@@ -46,12 +45,7 @@ class MainPresenter @Inject constructor(
         dayMatchedList.forEach {
             list += generateNewModelsForActivity(it)
         }
-        Log.wtf("showTodoItems", "$dayMatchedList")
         view?.showTodoList(list)
-    }
-
-    override fun onResume() {
-        getTodoList()
     }
 
     private fun generateNewModelsForActivity(model: TodoModel): MutableList<TodoModel> {
@@ -61,7 +55,7 @@ class MainPresenter @Inject constructor(
         var i = newModel.date_start
         val i2 = newModel.date_finish
         val i3 = (i2 - i) / 3600000L //число - количество экземпляров 1 дела,
-        // но с расчетом округленного времени(12:00 - 13:00 и т.д.)
+                                    // но с расчетом округленного времени(12:00 - 13:00 и т.д.)
 
         for (mtp in 0 until i3.toInt()) {
             if (i >= i2) {
@@ -89,6 +83,10 @@ class MainPresenter @Inject constructor(
         }
 
         return itemsList
+    }
+
+    override fun onResume() {
+        getTodoList()
     }
 
     override fun onDestroy() {

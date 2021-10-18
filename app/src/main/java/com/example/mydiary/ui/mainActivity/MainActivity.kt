@@ -1,7 +1,6 @@
 package com.example.mydiary.ui.mainActivity
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.CalendarView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +14,6 @@ import com.example.mydiary.models.TodoModel
 import com.example.mydiary.ui.createActivity.CreateTodoActivity
 import com.example.mydiary.ui.detailsActivity.DetailsActivity
 import com.example.mydiary.ui.detailsActivity.Navigator
-import java.text.SimpleDateFormat
-import java.util.Locale
 import javax.inject.Inject
 
 class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.View, Navigator {
@@ -27,7 +24,7 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
     private var binding: ActivityMainBinding? = null
     private var adapter: TodoAdapter? = null
     private var recyclerView: RecyclerView? = null
-    private var cDate: Long? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,40 +37,23 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
         recyclerView?.layoutManager = LinearLayoutManager(this)
         recyclerView?.adapter = adapter
 
-
-
         binding?.calendarView?.setOnDateChangeListener { _: CalendarView, year: Int, month: Int, dayOfMonth: Int ->
-            Log.d("MainActivity", "$year , $month , $dayOfMonth")
+
             presenter.showTodoItems(
                 year,
                 month + 1,
                 dayOfMonth
-            ) //+1 потому как calendarView отсчет месяцев ведет с нуля
+            )
+            //+1 потому как calendarView отсчет месяцев ведет с нуля
 
         }
 
         binding?.floatingActionButton?.setOnClickListener {
             CreateTodoActivity.start(this)
         }
-        cDate = binding?.calendarView?.date
-        Toast.makeText(this, "toasted on created", Toast.LENGTH_SHORT).show()
-
-    }
-
-    private fun showOnResumeTodo(cDate: Long) {
-        val fYear = SimpleDateFormat("yyyy", Locale.getDefault())
-        val fMonth = SimpleDateFormat("MM", Locale.getDefault())
-        val fDayOfMonth = SimpleDateFormat("dd", Locale.getDefault())
-
-        presenter.showTodoItems(
-            year = fYear.format(cDate).toInt(),
-            month = fMonth.format(cDate).toInt(),
-            dayOfMonth = fDayOfMonth.format(cDate).toInt()
-        )
     }
 
     override fun showTodoList(listForView: List<TodoModel>) {
-        Log.wtf("showTodoList", "$listForView")
         adapter?.submitList(listForView)
     }
 
@@ -88,7 +68,6 @@ class MainActivity @Inject constructor() : AppCompatActivity(), MainContract.Vie
     override fun onResume() {
         super.onResume()
         presenter.onResume()
-        showOnResumeTodo(cDate!!)
     }
 
     override fun onDestroy() {
