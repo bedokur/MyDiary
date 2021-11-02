@@ -30,7 +30,13 @@ class MainPresenter @Inject constructor(
     }
 
     override fun showTodoItems(year: Int, month: Int, dayOfMonth: Int) {
-        val selectedDate = "$dayOfMonth-${month}-$year"
+        var mDayOfMonth: String
+        if (dayOfMonth.toString().length == 1) {
+            mDayOfMonth = "0$dayOfMonth"
+        }
+        mDayOfMonth = "$dayOfMonth"
+
+        val selectedDate = "$mDayOfMonth-${month}-$year"
         val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         val list = mutableListOf<TodoModel>()
 
